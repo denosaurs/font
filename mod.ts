@@ -61,11 +61,11 @@ export interface Metrics {
   /**
    * Advance width of the glyph in subpixels. Used in horizontal fonts.
    */
-  advance_width: number;
+  advanceWidth: number;
   /**
    * Advance height of the glyph in subpixels. Used in vertical fonts.
    */
-  advance_height: number;
+  advanceHeight: number;
   /**
    * The bounding box that contains the glyph's outline at the offsets specified
    * by the font. This is always a smaller box than the bitmap bounds.

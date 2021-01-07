@@ -1,9 +1,16 @@
 # Font
 
+[![Tags](https://img.shields.io/github/release/denosaurs/font)](https://github.com/denosaurs/font/releases)
+[![CI Status](https://img.shields.io/github/workflow/status/denosaurs/font/check)](https://github.com/denosaurs/font/actions)
+[![Dependencies](https://img.shields.io/github/workflow/status/denosaurs/font/depsbot?label=dependencies)](https://github.com/denosaurs/depsbot)
+[![License](https://img.shields.io/github/license/denosaurs/font)](https://github.com/denosaurs/font/blob/master/LICENSE)
+
 This is a simple deno module providing wasm bindings to the [fontdue](https://github.com/mooman219/fontdue)
 for font rasterization and layout with support for TrueType (`.ttf/.ttc`) and OpenType (`.otf`).
 
 ## Example
+
+### Rasterization
 
 ```typescript
 import { Font } from "https://deno.land/x/font/mod.ts";
@@ -89,4 +96,4 @@ Pull request, issues and feedback are very welcome. Code style is formatted with
 
 ### Licence
 
-Copyright 2020, Denosaurs. All rights reserved. MIT license.
+Copyright 2021, Denosaurs. All rights reserved. MIT license.

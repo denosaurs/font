@@ -3,6 +3,19 @@
 This is a simple deno module providing wasm bindings to the [fontdue](https://github.com/mooman219/fontdue)
 for font rasterization and layout with support for TrueType (`.ttf/.ttc`) and OpenType (`.otf`).
 
+## Example
+
+```typescript
+import { Font } from "https://deno.land/x/font/mod.ts";
+
+// Read the font data.
+const data = await Deno.readFile("../Roboto-Regular.ttf");
+// Parse it into the font type.
+const font = new Font(font);
+// Rasterize and get the layout metrics for the letter 'g' at 17px.
+let { metrics, bitmap } = font.rasterize("g", 17.0);
+```
+
 ## Prerequisites
 
 | prerequisite                                            | installation                                             |

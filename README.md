@@ -13,21 +13,21 @@ for font rasterization and layout with support for TrueType (`.ttf/.ttc`) and Op
 | [rust-clippy](https://github.com/rust-lang/rust-clippy) | `rustup component add clippy`                            |
 | [wasm-pack](https://rustwasm.github.io/wasm-pack/)      | `cargo install wasm-pack`                                |
 
-## Development Scripts
+## Development
 
 ### build
 
 ```bash
 $ deno run --unstable --allow-read --allow-write --allow-run scripts/build.ts
 building rust                  ("wasm-pack build --target web --release")
-read wasm                      (size: 1274 bytes)
-compressed wasm using lz4      (reduction: 224 bytes, size: 1050 bytes)
-encoded wasm using base64      (increase: 350 bytes, size: 1400 bytes)
-read js                        (size: 1776 bytes)
-inlined js and wasm            (size: 3357 bytes)
-minified js                    (size reduction: 754 bytes, size: 2603 bytes)
+read wasm                      (size: 150856 bytes)
+compressed wasm using lz4      (reduction: 58651 bytes, size: 92205 bytes)
+encoded wasm using base64      (increase: 30735 bytes, size: 122940 bytes)
+read js                        (size: 5895 bytes)
+inlined js and wasm            (size: 129016 bytes)
+minified js                    (size reduction: 3100 bytes, size: 125916 bytes)
 writing output to file         (wasm.js)
-final size is: 2603 bytes
+final size is: 125916 bytes
 ```
 
 ### clean

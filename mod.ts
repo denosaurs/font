@@ -1,13 +1,13 @@
 import init, {
-  from_bytes,
-  horizontal_line_metrics,
-  vertical_line_metrics,
-  lookup_glyph_index,
-  metrics_indexed,
-  rasterize_indexed,
-  scale_factor,
+  from_bytes as fromBytes,
+  horizontal_line_metrics as horizontalLineMetrics,
+  lookup_glyph_index as lookupGlyphIndex,
+  metrics_indexed as metricsIndexed,
+  rasterize_indexed as rasterizeIndexed,
+  scale_factor as scaleFactor,
   source,
-  units_per_em,
+  units_per_em as unitsPerEm,
+  vertical_line_metrics as verticalLineMetrics,
 } from "./wasm.js";
 
 await init(source);
@@ -151,7 +151,7 @@ export class Font {
     collectionIndex: 0,
     scale: 40,
   }) {
-    this.#id = from_bytes(
+    this.#id = fromBytes(
       bytes,
       enableOffsetBoundingBox,
       collectionIndex,
@@ -164,7 +164,7 @@ export class Font {
    * text layout metrics. `undefined` if unpopulated.
    */
   horizontalLineMetrics(px: number): LineMetrics | undefined {
-    return horizontal_line_metrics(this.#id, px);
+    return horizontalLineMetrics(this.#id, px);
   }
 
   /**
@@ -172,21 +172,21 @@ export class Font {
    * text layout metrics. `undefined` if unpopulated.
    */
   verticalLineMetrics(px: number): LineMetrics | undefined {
-    return vertical_line_metrics(this.#id, px);
+    return verticalLineMetrics(this.#id, px);
   }
 
   /**
    * Gets the font's units per em.
    */
   unitsPerEm(): number {
-    return units_per_em(this.#id);
+    return unitsPerEm(this.#id);
   }
 
   /**
    * Calculates the glyph's outline scale factor for a given px size.
    */
   scaleFactor(px: number): number {
-    return scale_factor(this.#id, px);
+    return scaleFactor(this.#id, px);
   }
 
   /**
@@ -203,7 +203,7 @@ export class Font {
    * using `metrics` instead, unless your glyphs are pre-indexed.
    */
   metricsIndexed(index: number, px: number): Metrics {
-    return metrics_indexed(this.#id, index, px);
+    return metricsIndexed(this.#id, index, px);
   }
 
   /**
@@ -214,14 +214,14 @@ export class Font {
   rasterize(character: string, px: number): RasterizeResult {
     return this.rasterizeIndexed(this.lookupGlyphIndex(character), px);
   }
-  
+
   /**
    * Retrieves the layout metrics and rasterized bitmap at the given index.
    * You normally want to be using `rasterize` instead, unless your
    * glyphs are pre-indexed.
    */
   rasterizeIndexed(index: number, px: number): RasterizeResult {
-    return rasterize_indexed(this.#id, index, px);
+    return rasterizeIndexed(this.#id, index, px);
   }
 
   /**
@@ -229,6 +229,6 @@ export class Font {
    * is not present in the font then 0 is returned.
    */
   lookupGlyphIndex(character: string): number {
-    return lookup_glyph_index(this.#id, character);
+    return lookupGlyphIndex(this.#id, character);
   }
 }

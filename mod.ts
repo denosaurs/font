@@ -15,7 +15,7 @@ await init(source);
 /**
  * Settings for controlling specific font and layout behavior.
  */
-interface LoadOptions {
+export interface LoadOptions {
   /**
    * The default is true. This offsets glyphs relative to their position in their
    * scaled bounding box. This is required for laying out glyphs correctly, but
@@ -39,7 +39,7 @@ interface LoadOptions {
 /**
  * Encapsulates all layout information associated with a glyph for a fixed scale.
  */
-interface Metrics {
+export interface Metrics {
   /**
    * Whole pixel offset of the left-most edge of the bitmap. This may be negative
    * to reflect the glyph is positioned to the left of the origin. 
@@ -77,7 +77,7 @@ interface Metrics {
  * Defines the bounds for a glyph's outline in subpixels. A glyph's outline is
  * always contained in its bitmap.
  */
-interface OutlineBounds {
+export interface OutlineBounds {
   /**
    * Subpixel offset of the left-most edge of the glyph's outline.
    */
@@ -99,7 +99,7 @@ interface OutlineBounds {
 /**
  * Metrics associated with line positioning.
  */
-interface LineMetrics {
+export interface LineMetrics {
   /**
    * The highest point that any glyph in the font extends to above the baseline.
    * Typically positive.
@@ -126,7 +126,7 @@ interface LineMetrics {
 /**
  * The metrics and bitmap results of a rasterized glyph
  */
-interface RasterizeResult {
+export interface RasterizeResult {
   /**
    * Sizing and positioning metadata for the rasterized glyph.
    */

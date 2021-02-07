@@ -5,8 +5,9 @@
 [![Dependencies](https://img.shields.io/github/workflow/status/denosaurs/font/depsbot?label=dependencies)](https://github.com/denosaurs/depsbot)
 [![License](https://img.shields.io/github/license/denosaurs/font)](https://github.com/denosaurs/font/blob/master/LICENSE)
 
-This is a simple deno module providing wasm bindings to the [fontdue](https://github.com/mooman219/fontdue)
-for font rasterization and layout with support for TrueType (`.ttf/.ttc`) and OpenType (`.otf`).
+This is a simple deno module providing wasm bindings to the
+[fontdue](https://github.com/mooman219/fontdue) for font rasterization and
+layout with support for TrueType (`.ttf/.ttc`) and OpenType (`.otf`).
 
 ## Example
 
@@ -92,7 +93,9 @@ test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out (2ms)
 
 ### Contribution
 
-Pull request, issues and feedback are very welcome. Code style is formatted with `deno fmt` and commit messages are done following [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) spec.
+Pull request, issues and feedback are very welcome. Code style is formatted with
+`deno fmt` and commit messages are done following
+[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) spec.
 
 ### Licence
 

@@ -31,7 +31,7 @@ function memoize<A extends unknown[] | [], T>(
       if (cache[key] === undefined) {
         cache[key] = fn(...args);
       }
-  
+
       return cache[key];
     };
   }
@@ -293,13 +293,23 @@ export class FontCached {
       scale,
     );
 
-    this.horizontalLineMetrics = memoize((px) => horizontalLineMetrics(this.#id, px));
-    this.verticalLineMetrics = memoize((px) => verticalLineMetrics(this.#id, px));
+    this.horizontalLineMetrics = memoize((px) =>
+      horizontalLineMetrics(this.#id, px)
+    );
+    this.verticalLineMetrics = memoize((px) =>
+      verticalLineMetrics(this.#id, px)
+    );
     this.unitsPerEm = memoize(() => unitsPerEm(this.#id));
     this.scaleFactor = memoize((px) => scaleFactor(this.#id, px));
-    this.metricsIndexed = memoize((index, px) => metricsIndexed(this.#id, index, px));
-    this.rasterizeIndexed = memoize((index, px) => rasterizeIndexed(this.#id, index, px));
-    this.lookupGlyphIndex = memoize((character) => lookupGlyphIndex(this.#id, character));
+    this.metricsIndexed = memoize((index, px) =>
+      metricsIndexed(this.#id, index, px)
+    );
+    this.rasterizeIndexed = memoize((index, px) =>
+      rasterizeIndexed(this.#id, index, px)
+    );
+    this.lookupGlyphIndex = memoize((character) =>
+      lookupGlyphIndex(this.#id, character)
+    );
   }
 
   metrics(character: string, px: number): Metrics {

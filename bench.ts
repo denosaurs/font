@@ -11,7 +11,7 @@ bench({
   runs: 100,
   func(b): void {
     const font = new Font(OpenSans);
-    
+
     b.start();
     for (let i = 0; i < 1e3; i++) font.rasterize("g", 17);
     b.stop();

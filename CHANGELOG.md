@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog],
 and this project adheres to [Semantic Versioning].
 
+## [0.1.3] - 2021-02-07
+
 ## [0.1.2] - 2021-01-08
 
 ### Features
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning].
 
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
+[0.1.3]: https://github.com/denosaurs/font/compare/0.1.2...0.1.3
 [0.1.2]: https://github.com/denosaurs/font/compare/0.1.1...0.1.2
 [`0b8d95e`]: https://github.com/denosaurs/font/commit/0b8d95e141cdcc4d53170243c2c59f89a85142a2
 [0.1.1]: https://github.com/denosaurs/font/compare/0.1.0...0.1.1

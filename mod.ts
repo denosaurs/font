@@ -10,6 +10,33 @@ import init, {
   vertical_line_metrics as verticalLineMetrics,
 } from "./wasm.js";
 
+function memoize<A extends unknown[] | [], T>(
+  fn: (...args: A) => T,
+): (...args: A) => T {
+  if (fn.length === 0) {
+    let cache: T | undefined = undefined;
+
+    return (...args: A): T => {
+      if (cache === undefined) {
+        cache = fn(...args);
+      }
+
+      return cache;
+    };
+  } else {
+    const cache: Record<string, T> = {};
+
+    return (...args: A): T => {
+      const key = args.join();
+      if (cache[key] === undefined) {
+        cache[key] = fn(...args);
+      }
+  
+      return cache[key];
+    };
+  }
+}
+
 await init(source);
 
 /**
@@ -143,7 +170,7 @@ export interface RasterizeResult {
  * Represents a font.
  */
 export class Font {
-  protected readonly id: number;
+  readonly #id: number;
 
   constructor(bytes: Uint8Array, {
     enableOffsetBoundingBox = true,
@@ -154,7 +181,7 @@ export class Font {
     collectionIndex: 0,
     scale: 40,
   }) {
-    this.id = fromBytes(
+    this.#id = fromBytes(
       bytes,
       enableOffsetBoundingBox,
       collectionIndex,
@@ -167,7 +194,7 @@ export class Font {
    * text layout metrics. `undefined` if unpopulated.
    */
   horizontalLineMetrics(px: number): LineMetrics | undefined {
-    return horizontalLineMetrics(this.id, px);
+    return horizontalLineMetrics(this.#id, px);
   }
 
   /**
@@ -175,21 +202,21 @@ export class Font {
    * text layout metrics. `undefined` if unpopulated.
    */
   verticalLineMetrics(px: number): LineMetrics | undefined {
-    return verticalLineMetrics(this.id, px);
+    return verticalLineMetrics(this.#id, px);
   }
 
   /**
    * Gets the font's units per em.
    */
   unitsPerEm(): number {
-    return unitsPerEm(this.id);
+    return unitsPerEm(this.#id);
   }
 
   /**
    * Calculates the glyph's outline scale factor for a given px size.
    */
   scaleFactor(px: number): number {
-    return scaleFactor(this.id, px);
+    return scaleFactor(this.#id, px);
   }
 
   /**
@@ -206,7 +233,7 @@ export class Font {
    * using `metrics` instead, unless your glyphs are pre-indexed.
    */
   metricsIndexed(index: number, px: number): Metrics {
-    return metricsIndexed(this.id, index, px);
+    return metricsIndexed(this.#id, index, px);
   }
 
   /**
@@ -224,7 +251,7 @@ export class Font {
    * glyphs are pre-indexed.
    */
   rasterizeIndexed(index: number, px: number): RasterizeResult {
-    return rasterizeIndexed(this.id, index, px);
+    return rasterizeIndexed(this.#id, index, px);
   }
 
   /**
@@ -232,91 +259,54 @@ export class Font {
    * is not present in the font then 0 is returned.
    */
   lookupGlyphIndex(character: string): number {
-    return lookupGlyphIndex(this.id, character);
+    return lookupGlyphIndex(this.#id, character);
   }
 }
 
 /**
  * Represents a font which caches (memoizes) all returns, increasing performance.
  */
-export class FontCached extends Font {
-  #horizontalLineMetricsCache: Map<number, LineMetrics | undefined> = new Map();
-  #verticalLineMetricsCache: Map<number, LineMetrics | undefined> = new Map();
-  #unitsPerEmCache: number | undefined;
-  #scaleFactorCache: Map<number, number> = new Map();
-  #metricsIndexedCache: Map<[number, number], Metrics> = new Map();
-  #rasterizeIndexedCache: Map<[number, number], RasterizeResult> = new Map();
-  #lookupGlyphIndexCache: Map<string, number> = new Map();
+export class FontCached {
+  readonly #id: number;
 
-  horizontalLineMetrics(px: number): LineMetrics | undefined {
-    if (this.#horizontalLineMetricsCache.has(px)) {
-      return this.#horizontalLineMetricsCache.get(px)!;
-    }
+  horizontalLineMetrics: (px: number) => LineMetrics | undefined;
+  verticalLineMetrics: (px: number) => LineMetrics | undefined;
+  unitsPerEm: () => number;
+  scaleFactor: (px: number) => number;
+  metricsIndexed: (index: number, px: number) => Metrics;
+  rasterizeIndexed: (index: number, px: number) => RasterizeResult;
+  lookupGlyphIndex: (character: string) => number;
 
-    const metrics = horizontalLineMetrics(this.id, px);
-    this.#horizontalLineMetricsCache.set(px, metrics);
+  constructor(bytes: Uint8Array, {
+    enableOffsetBoundingBox = true,
+    collectionIndex = 0,
+    scale = 40,
+  }: LoadOptions = {
+    enableOffsetBoundingBox: true,
+    collectionIndex: 0,
+    scale: 40,
+  }) {
+    this.#id = fromBytes(
+      bytes,
+      enableOffsetBoundingBox,
+      collectionIndex,
+      scale,
+    );
 
-    return metrics;
+    this.horizontalLineMetrics = memoize((px) => horizontalLineMetrics(this.#id, px));
+    this.verticalLineMetrics = memoize((px) => verticalLineMetrics(this.#id, px));
+    this.unitsPerEm = memoize(() => unitsPerEm(this.#id));
+    this.scaleFactor = memoize((px) => scaleFactor(this.#id, px));
+    this.metricsIndexed = memoize((index, px) => metricsIndexed(this.#id, index, px));
+    this.rasterizeIndexed = memoize((index, px) => rasterizeIndexed(this.#id, index, px));
+    this.lookupGlyphIndex = memoize((character) => lookupGlyphIndex(this.#id, character));
   }
 
-  verticalLineMetrics(px: number): LineMetrics | undefined {
-    if (this.#verticalLineMetricsCache.has(px)) {
-      return this.#verticalLineMetricsCache.get(px)!;
-    }
-
-    const metrics = verticalLineMetrics(this.id, px);
-    this.#verticalLineMetricsCache.set(px, metrics);
-
-    return metrics;
+  metrics(character: string, px: number): Metrics {
+    return this.metricsIndexed(this.lookupGlyphIndex(character), px);
   }
 
-  unitsPerEm(): number {
-    this.#unitsPerEmCache ??= unitsPerEm(this.id);
-
-    return this.#unitsPerEmCache!;
-  }
-
-  scaleFactor(px: number): number {
-    if (this.#scaleFactorCache.has(px)) {
-      return this.#scaleFactorCache.get(px)!;
-    }
-
-    const factor = scaleFactor(this.id, px);
-    this.#scaleFactorCache.set(px, factor);
-
-    return factor;
-  }
-
-  metricsIndexed(index: number, px: number): Metrics {
-    if (this.#metricsIndexedCache.has([index, px])) {
-      return this.#metricsIndexedCache.get([index, px])!;
-    }
-
-    const metrics = metricsIndexed(this.id, index, px);
-    this.#metricsIndexedCache.set([index, px], metrics);
-
-    return metrics;
-  }
-
-  rasterizeIndexed(index: number, px: number): RasterizeResult {
-    if (this.#rasterizeIndexedCache.has([index, px])) {
-      return this.#rasterizeIndexedCache.get([index, px])!;
-    }
-
-    const result = rasterizeIndexed(this.id, index, px);
-    this.#rasterizeIndexedCache.set([index, px], result);
-
-    return result;
-  }
-
-  lookupGlyphIndex(character: string): number {
-    if (this.#lookupGlyphIndexCache.has(character)) {
-      return this.#lookupGlyphIndexCache.get(character)!;
-    }
-
-    const index = lookupGlyphIndex(this.id, character);
-    this.#lookupGlyphIndexCache.set(character, index);
-
-    return index;
+  rasterize(character: string, px: number): RasterizeResult {
+    return this.rasterizeIndexed(this.lookupGlyphIndex(character), px);
   }
 }
